@@ -13,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.3.12",
+    "@types/inquirer": "^9.0.7",
     "@types/mocha": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
@@ -24,5 +25,10 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.0.4",
     "typedoc": "^0.25.11"
+  },
+  "dependencies": {
+    "@types/lowdb": "^1.0.15",
+    "inquirer": "^9.2.15",
+    "lowdb": "^7.0.1"
   }
 }
