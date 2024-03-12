@@ -7,7 +7,7 @@
     "test": "nyc mocha",
     "coverage": "nyc npm test && nyc report --reporter=lcov",
     "doc": "typedoc",
-    "start": "tsc-watch --onSuccess \"node dist/index.js\""
+    "start": "tsc-watch --onSuccess \"node dist/EJERCICIO1/index.js\""
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.12",
     "@types/inquirer": "^9.0.7",
+    "@types/lowdb": "^1.0.15",
     "@types/mocha": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
@@ -28,8 +29,7 @@
     "typedoc": "^0.25.11"
   },
   "dependencies": {
-    "@types/lowdb": "^1.0.15",
-    "inquirer": "^9.2.15",
+    "inquirer": "^7.3.3",
     "lowdb": "^1.0.0"
   }
 }

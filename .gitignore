@@ -1,6 +1,4 @@
 node_modules
 dist
-package-lock.json
 .nyc_output
 .gitignore
-.mocharc.json

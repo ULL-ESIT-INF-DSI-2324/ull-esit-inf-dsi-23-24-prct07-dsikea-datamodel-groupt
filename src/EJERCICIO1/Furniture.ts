@@ -31,7 +31,7 @@ export class FurnitureManager {
   }
 
   /**
-   * Método para buscar muebles por nombre, tipo o descripción y ordenarlos.
+   * Método para buscar muebles por nombre o descripción y ordenarlos.
    * Se encarga de buscar muebles por nombre, tipo o descripción y ordenarlos.
    * Para ello, recibe el criterio de búsqueda, el término de búsqueda, el orden y el criterio de orden.
    * Retorna la lista de muebles que coinciden con el criterio de búsqueda y ordenados.
@@ -76,20 +76,5 @@ export class FurnitureManager {
    */
   deleteFurniture(furnitureId: number): void {
     this.furnitureList = this.furnitureList.filter((furniture) => furniture.id !== furnitureId);
-  }
-  
-  /**
-   * Método para actualizar muebles.
-   * Se encarga de actualizar un mueble.
-   * Para ello, recibe el id del mueble a actualizar y el mueble actualizado.
-   * @param furnitureId id del mueble a actualizar.
-   * @param furniture mueble actualizado.
-   * @returns void. no retorna nada.
-   */
-  updateFurniture(furnitureId: number, furniture: Furniture): void {
-    const index = this.furnitureList.findIndex((furniture) => furniture.id === furnitureId);
-    if (index !== -1) {
-      this.furnitureList[index] = furniture;
-    }
   }
 }
