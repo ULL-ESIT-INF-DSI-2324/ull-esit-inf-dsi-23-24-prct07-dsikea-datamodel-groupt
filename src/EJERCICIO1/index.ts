@@ -1,44 +1,23 @@
-// app.ts
-import inquirer from 'inquirer';
+import * as inquirer from "inquirer";
+import * as lowdb from "lowdb";
+import * as FileSync from "lowdb/adapters/FileSync";
+
+// Asumiendo que estos son tus archivos de manager correctamente configurados
 import { FurnitureManager } from './Furniture';
 import { ProviderManager } from './Providers';
 import { CustomerManager } from './Customer';
-import { Stock } from './stock';
 
-const furnitureManager = new FurnitureManager();
-const providerManager = new ProviderManager();
-const customerManager = new CustomerManager();
-const stock = new Stock(furnitureManager, providerManager, customerManager);
+// Configuración del adaptador y la base de datos Lowdb
+const adapter = new FileSync("db.json");
+const db = lowdb(adapter);
 
-async function main() {
-  while (true) {
-    const action = await inquirer.prompt({
-      type: 'list',
-      name: 'action',
-      message: 'Seleccione una acción:',
-      choices: ['Gestionar Muebles', 'Gestionar Proveedores', 'Gestionar Clientes', 'Realizar Transacción', 'Generar Informes', 'Salir'],
-    });
+// Asegúrate de inicializar la base de datos con la estructura predeterminada
+db.data ||= { furniture: [], providers: [], customers: [] };
+db.write();
 
-    switch (action.action) {
-      case 'Gestionar Muebles':
-        // Implementa la lógica para gestionar muebles
-        break;
-      case 'Gestionar Proveedores':
-        // Implementa la lógica para gestionar proveedores
-        break;
-      case 'Gestionar Clientes':
-        // Implementa la lógica para gestionar clientes
-        break;
-      case 'Realizar Transacción':
-        // Implementa la lógica para realizar transacciones
-        break;
-      case 'Generar Informes':
-        // Implementa la lógica para generar informes
-        break;
-      case 'Salir':
-        process.exit();
-    }
-  }
-}
+// Instancia de los managers
+const furnitureManager = new FurnitureManager(db);
+const providerManager = new ProviderManager(db);
+const customerManager = new CustomerManager(db);
 
-main();
+// Aquí continúa tu lógica de aplicación con inquirer...

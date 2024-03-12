@@ -1,4 +1,3 @@
-
 /**
  * Interface Provider. Representa la entidad de proveedores.
  * Cada proveedor tiene un id, nombre, contacto y dirección.

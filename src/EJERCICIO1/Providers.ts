@@ -4,16 +4,16 @@ import { Provider } from './ProviderEntity';
  * Clase ProviderManager. Representa el gestor de proveedores.
  * Permite agregar, obtener y buscar proveedores.
  * @class ProviderManager
- * @param {Provider[]} providerList - Lista de proveedores.
- * @method addProvider - Agrega un proveedor a la lista de proveedores.
- * @method getProviderList - Obtiene la lista de proveedores.
- * @method getProviderById - Obtiene un proveedor por su id.
  */
 export class ProviderManager {
+  /**
+   * Lista de proveedores.
+   * @private por ser una propiedad privada.
+   */
   private providerList: Provider[] = [];
 
   /**
-   * Método para agregar un proveedor a la lista de proveedores.	
+   * Método para agregar un proveedor a la lista de proveedores.
    * @param provider proveedor a agregar.
    */
   addProvider(provider: Provider): void {
@@ -35,5 +35,32 @@ export class ProviderManager {
    */
   getProviderById(id: number): Provider | undefined {
     return this.providerList.find((provider) => provider.id === id);
+  }
+
+  /**
+   * Método para buscar proveedores por nombre.
+   * @param name nombre del proveedor a buscar.
+   * @returns lista de proveedores que coinciden con el nombre.
+   */
+  searchProvidersByName(name: string): Provider[] {
+    return this.providerList.filter((provider) => provider.name.toLowerCase().includes(name.toLowerCase()));
+  }
+
+  /**
+   * Método para buscar proveedores por contacto.
+   * @param contact contacto del proveedor a buscar.
+   * @returns lista de proveedores que coinciden con el contacto.
+   */
+  searchProvidersByContact(contact: string): Provider[] {
+    return this.providerList.filter((provider) => provider.contact.toLowerCase().includes(contact.toLowerCase()));
+  }
+
+  /**
+   * Método para buscar proveedores por dirección.
+   * @param address dirección del proveedor a buscar.
+   * @returns lista de proveedores que coinciden con la dirección.
+   */
+  searchProvidersByAddress(address: string): Provider[] {
+    return this.providerList.filter((provider) => provider.address.toLowerCase().includes(address.toLowerCase()));
   }
 }

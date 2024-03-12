@@ -4,9 +4,10 @@
   "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/a4IaLRGZ)",
   "main": "index.js",
   "scripts": {
+    "test": "nyc mocha",
+    "coverage": "nyc npm test && nyc report --reporter=lcov",
     "doc": "typedoc",
-    "start": "tsc-watch --onSuccess \"node dist/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc-watch --onSuccess \"node dist/index.js\""
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,6 @@
   "dependencies": {
     "@types/lowdb": "^1.0.15",
     "inquirer": "^9.2.15",
-    "lowdb": "^7.0.1"
+    "lowdb": "^1.0.0"
   }
 }

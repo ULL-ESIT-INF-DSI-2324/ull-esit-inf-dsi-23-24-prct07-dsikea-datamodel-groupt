@@ -2,7 +2,7 @@
 
 import 'mocha';
 import { expect } from 'chai';
-import { Customer } from '../../src/EJERCICIO1/CustomerEntitY';
+import { Customer } from '../../src/EJERCICIO1/CustomerEntity';
 
 // PRUEBAS PARA LA INTERFAZ CUSTOMER
 describe('CustomerEntity', () => {
@@ -98,5 +98,18 @@ describe('CustomerEntity', () => {
     expect(customer.name).not.to.be.a('number');
     expect(customer.contact).not.to.be.a('number');
     expect(customer.address).not.to.be.a('number');
+  });
+  // pruebas para ver que tiene un numro id, un nombre, un contacto y una dirección
+  it('should have an id number, a name, a contact and an address', () => {
+    const customer: Customer = {
+      id: 1,
+      name: 'Juan',
+      contact: ' 1234567890',
+      address: 'Calle 123',
+    };
+    expect(customer).to.have.property('id');
+    expect(customer).to.have.property('name');
+    expect(customer).to.have.property('contact');
+    expect(customer).to.have.property('address');
   });
 });
