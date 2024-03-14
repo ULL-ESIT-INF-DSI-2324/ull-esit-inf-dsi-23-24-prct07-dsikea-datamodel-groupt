@@ -17,6 +17,9 @@
 
 **Profesor:** Eduardo Manuel Segredo González
 
+[![Coveralls](https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct07-dsikea-datamodel-groupt/actions/workflows/coveralls.yml/badge.svg)](https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct07-dsikea-datamodel-groupt/actions/workflows/coveralls.yml)
+
+
 ---
 
 # Índice
