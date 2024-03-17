@@ -1,7 +1,7 @@
 // PRUEBAS PARA LA INTERFAZ PROVIDERS
 import 'mocha';
 import { expect } from 'chai';
-import { Provider } from '../../src/EJERCICIO1/ProviderEntity';
+import { Provider } from '../../src/EJERCICIO1/provider';
 
 // pruebas para la interfaz provider
 describe('Provider Entity', () => {
@@ -129,5 +129,51 @@ describe('Provider Entity', () => {
       address: 'Calle 123',
     };
     expect(provider).not.to.be.NaN;
+  });
+  // comprobar que no es un número infinito
+  it('should not be an infinite number', () => {
+    const provider: Provider = {
+      id: 1,
+      name: 'Juan',
+      contact: '1234567890',
+      address: 'Calle 123',
+    };
+    expect(provider).to.not.equal(Infinity);
+  });
+  // comporbaos que tiene 4 propiedades
+  it('should have 4 properties', () => {
+    const provider: Provider = {
+      id: 1,
+      name: 'Juan',
+      contact: '1234567890',
+      address: 'Calle 123',
+    };
+    expect(Object.keys(provider)).to.have.length(4);
+  });
+  // esas propiedades son las correctas
+  it('should have the right properties', () => {
+    const provider: Provider = {
+      id: 1,
+      name: 'Juan',
+      contact: '1234567890',
+      address: 'Calle 123',
+    };
+    expect(provider).to.have.property('id').to.be.a('number');
+    expect(provider).to.have.property('name').to.be.a('string');
+    expect(provider).to.have.property('contact').to.be.a('string');
+    expect(provider).to.have.property('address').to.be.a('string');
+  });
+  // comporbamos que todas las propiedades no sea null
+  it('should not have null properties', () => {
+    const provider: Provider = {
+      id: 1,
+      name: 'Juan',
+      contact: '1234567890',
+      address: 'Calle 123',
+    };
+    expect(provider.id).not.to.be.null;
+    expect(provider.name).not.to.be.null;
+    expect(provider.contact).not.to.be.null;
+    expect(provider.address).not.to.be.null;
   });
 });

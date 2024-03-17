@@ -1,151 +1,164 @@
-// PRUEBAS  PARA LA INTERFAZ FURNITURE
+// PRUEBAS PARA LA INTERFAZ FURNITURE
 
 import 'mocha';
 import { expect } from 'chai';
-import { Furniture } from '../../src/EJERCICIO1/FurnitureEntity';
+import { Furniture } from '../../src/EJERCICIO1/furniture';
 
-// PRUEBAS PARA LA INTERFAZ FURNITURE
+
+// pruebas para la interfaz Furniture
 describe('FurnitureEntity', () => {
-  // prueba para comporbar que se puede crear un mueble
-  it('should create a furniture', () => {
+  // comporbamos que tengas las propiedades correctas
+  it('should have the right properties', () => {
     const furniture: Furniture = {
       id: 1,
       name: 'Silla',
       description: 'Silla de madera',
       material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
     };
-    expect(furniture).to.be.a('object');
+    expect(furniture).to.have.property('id');
+    expect(furniture).to.have.property('name');
+    expect(furniture).to.have.property('description');
+    expect(furniture).to.have.property('material');
+    expect(furniture).to.have.property('dimensions');
+    expect(furniture).to.have.property('price');
+    expect(furniture).to.have.property('quantity');
   });
-  // prueba para comprobar que el id es un número
-  it('should id be a number', () => {
+  // comprobamos que las propiedades sean del tipo correcto
+  it('should have the right types', () => {
     const furniture: Furniture = {
       id: 1,
       name: 'Silla',
       description: 'Silla de madera',
       material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
     };
     expect(furniture.id).to.be.a('number');
-  });
-  // prueba para comprobar que el nombre es un string
-  it('should name be a string', () => {
-    const furniture: Furniture = {
-      id: 1,
-      name: 'Silla',
-      description: 'Silla de madera',
-      material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
-    };
     expect(furniture.name).to.be.a('string');
-  });
-  // prueba para comprobar que la descripción es un string
-  it('should description be a string', () => {
-    const furniture: Furniture = {
-      id: 1,
-      name: 'Silla',
-      description: 'Silla de madera',
-      material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
-    };
     expect(furniture.description).to.be.a('string');
-  });
-  // prueba para comprobar que el material es un string
-  it('should material be a string', () => {
-    const furniture: Furniture = {
-      id: 1,
-      name: 'Silla',
-      description: 'Silla de madera',
-      material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
-    };
     expect(furniture.material).to.be.a('string');
-  });
-  // prueba para comprobar que las dimensiones es un string
-  it('should dimensions be a string', () => {
-    const furniture: Furniture = {
-      id: 1,
-      name: 'Silla',
-      description: 'Silla de madera',
-      material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
-    };
     expect(furniture.dimensions).to.be.a('string');
-  });
-  // prueba para comprobar que el precio es un número
-  it('should price be a number', () => {
-    const furniture: Furniture = {
-      id: 1,
-      name: 'Silla',
-      description: 'Silla de madera',
-      material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
-    };
     expect(furniture.price).to.be.a('number');
+    expect(furniture.quantity).to.be.a('number');
   });
-  // prueba para comprobar que es una interfaz
-  it('should be a interface', () => {
+  // comprobamos que las propiedades sean requeridas
+  it('should have required properties', () => {
     const furniture: Furniture = {
       id: 1,
       name: 'Silla',
       description: 'Silla de madera',
       material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
     };
-    expect(furniture).to.be.a('object');
+    expect(furniture.id).to.exist;
+    expect(furniture.name).to.exist;
+    expect(furniture.description).to.exist;
+    expect(furniture.material).to.exist;
+    expect(furniture.dimensions).to.exist;
+    expect(furniture.price).to.exist;
+    expect(furniture.quantity).to.exist;
   });
-  // pruebas para comprobar que no retorna un tipo incorrecto
-  // prueba para comprobar que el precio no es un string
-  it('should price not be a string', () => {
+  // Comporbamos que es una interfaz
+  it('should be an interface', () => {
     const furniture: Furniture = {
       id: 1,
       name: 'Silla',
       description: 'Silla de madera',
       material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
     };
-    expect(furniture.price).to.not.be.a('string');
-    expect(furniture.price).to.be.a('number');
-    expect(furniture.price).to.not.be.a('object');
-    expect(furniture.price).to.not.be.a('boolean');
+    expect(furniture).to.be.an('object');
   });
-  // prueba para comprobar que el nombre no es un número
-  it('should name not be a number', () => {
+  // comporbamos que no tenga propiedades adicionales
+  it('should not have additional properties', () => {
     const furniture: Furniture = {
       id: 1,
       name: 'Silla',
       description: 'Silla de madera',
       material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
     };
-    expect(furniture.name).to.not.be.a('number');
-    expect(furniture.name).to.be.a('string');
-    expect(furniture.name).to.not.be.a('object');
-    expect(furniture.name).to.not.be.a('boolean');
+    expect(furniture).to.have.all.keys('id', 'name', 'description', 'material', 'dimensions', 'price', 'quantity');
   });
-  // prueba para comprobar que la descripción no es un número
-  it('should description not be a number', () => {
+  // comprobamos que no sea null
+  it('should not be null', () => {
     const furniture: Furniture = {
       id: 1,
       name: 'Silla',
       description: 'Silla de madera',
       material: 'Madera',
-      dimensions: '40x40x40',
-      price: 100,
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
     };
-    expect(furniture.description).to.not.be.a('number');
-    expect(furniture.description).to.be.a('string');
-    expect(furniture.description).to.not.be.a('object');
-    expect(furniture.description).to.not.be.a('boolean');
+    expect(furniture).to.not.be.null;
+  });
+  // comporbamos que tenga 7 propiedades
+  it('should have 7 properties', () => {
+    const furniture: Furniture = {
+      id: 1,
+      name: 'Silla',
+      description: 'Silla de madera',
+      material: 'Madera',
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
+    };
+    expect(Object.keys(furniture)).to.have.length(7);
+  });
+  // comprobamos que tenga las propiedades correctas
+  it('should have the right properties', () => {
+    const furniture: Furniture = {
+      id: 1,
+      name: 'Silla',
+      description: 'Silla de madera',
+      material: 'Madera',
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
+    };
+    expect(furniture).to.have.property('id').to.be.a('number');
+    expect(furniture).to.have.property('name').to.be.a('string');
+    expect(furniture).to.have.property('description').to.be.a('string');
+    expect(furniture).to.have.property('material').to.be.a('string');
+    expect(furniture).to.have.property('dimensions').to.be.a('string');
+    expect(furniture).to.have.property('price').to.be.a('number');
+    expect(furniture).to.have.property('quantity').to.be.a('number');
+  });
+  // comporbamos que es un array
+  it('should be an array', () => {
+    const furniture: Furniture = {
+      id: 1,
+      name: 'Silla',
+      description: 'Silla de madera',
+      material: 'Madera',
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
+    };
+    expect(furniture).to.be.an('object');
+  });
+  // comporbamos que no sea undefined
+  it('should not be undefined', () => {
+    const furniture: Furniture = {
+      id: 1,
+      name: 'Silla',
+      description: 'Silla de madera',
+      material: 'Madera',
+      dimensions: '40x40x80',
+      price: 20,
+      quantity: 10
+    };
+    expect(furniture).to.not.be.undefined;
   });
 });
