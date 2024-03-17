@@ -518,10 +518,10 @@ SonarCloud es una plataforma de análisis estático de código diseñada para me
 # 8. Ejercicio 
 
 
-1. Diseño de la Base de Datos:
+1. **Diseño de la Base de Datos:**
 Se ha diseñado una estructura de base de datos flexible y escalable para almacenar la información relevante del negocio. La base de datos se ha implementado utilizando lowdb, una base de datos basada en archivos JSON que facilita el almacenamiento y manipulación de datos. Se han definido las siguientes entidades principales:
 
-Clientes: Contiene información sobre los clientes, incluyendo su nombre, contacto y dirección.
+**Clientes**: Contiene información sobre los clientes, incluyendo su nombre, contacto y dirección.
 
 ``` ts
 export interface Customer {
@@ -532,7 +532,7 @@ export interface Customer {
 }
 ```
 
-Proveedores: Almacena los detalles de los proveedores, como su nombre, contacto y dirección.
+**Proveedores**: Almacena los detalles de los proveedores, como su nombre, contacto y dirección.
 
 ``` ts
 export interface Provider {
@@ -543,7 +543,7 @@ export interface Provider {
 }
 ```
 
-Muebles: Registra información detallada sobre los muebles disponibles, como nombre, descripción, material, dimensiones, precio y cantidad en stock.
+**Muebles**: Registra información detallada sobre los muebles disponibles, como nombre, descripción, material, dimensiones, precio y cantidad en stock.
 
 ``` ts
 export interface Furniture {
@@ -556,26 +556,368 @@ export interface Furniture {
 }
 ```
 
-Stock: Gestiona el inventario de muebles, incluyendo transacciones de compra y venta, así como el seguimiento de la cantidad disponible de cada artículo.
+**Stock**: Gestiona el inventario de muebles, incluyendo transacciones de compra y venta, así como el seguimiento de la cantidad disponible de cada artículo.
 
+primero, creo la clase stock, cuyos atributos serán un map que contendrá los muebles según su nombre y un vector de transacciones donde se guardarán todas las transacciones hechas durante la sesión.
 
+``` ts
+export class Stock {
 
-2. Implementación de la Interfaz de Usuario:
+  private furniturestock: Map<string, Furniture> = new Map<string, Furniture>;
+
+  private transactionshistory: Transaction[] = [];
+
+  constructor(items: Furniture[]) {
+    items.forEach((item) => {
+      this.furniturestock.set(item.name, item)
+    })
+  }
+
+```
+
+Implementamos funciones básicas para meter muebles al map a la vez que se añade la transacción. También lo hacemos para eliminar muebles.
+
+``` ts
+
+  addItem(item: Furniture, quantity: number): void {
+    this.furniturestock.set(item.name, item);
+    const id: number = Math.floor(Math.random() * 1000000);
+    const date: Date = new Date();
+    const price: number = item.price;
+    const transactiontype: TransactionType = "Compra";
+    const furniture: Furniture = item
+    this.transactionshistory.push({
+      id,
+      date,
+      price,
+      quantity,
+      transactiontype,
+      furniture
+    });
+  }
+  
+  removeItem(item: Furniture, quantity: number): void {
+    this.furniturestock.set(item.name, item)
+    const id: number = Math.floor(Math.random() * 1000000);
+    const date: Date = new Date();
+    const price: number = item.price;
+    const transactiontype: TransactionType = "Venta";
+    const furniture: Furniture = item
+    this.transactionshistory.push({
+      id,
+      date, 
+      price, 
+      quantity, 
+      transactiontype, 
+      furniture
+    })
+  }
+
+```
+
+A partir de ahora se muestran las funciones las cuales son específicas del stock como mostrar todo el stock, mostrar la información de un mueble en específico, enseñar las transacciones o mostrar información sobre el histórico de transacciones
+
+``` ts
+  printStock() {
+    this.furniturestock.forEach((item) => {
+      console.log(item.name + ".............................." + item.quantity)
+    });
+  }
+
+  specificItemInfo(name: string): void {
+    const item: Furniture = this.furniturestock.get(name) as Furniture;
+    console.log()
+    console.log("Objeto .............................. " + item.name);
+    console.log("Material ............................ " + item.material);
+    console.log("Precio .............................. " + item.price);
+    console.log("Dimensiones ......................... " + item.dimensions);
+    console.log("Cantidad en stock ................... " + item.quantity);
+    console.log("Más detalles ........................ " + item.description);
+    console.log("Id del objeto ....................... " + item.id);
+    console.log()
+  }
+
+  printTransactions() {
+    this.transactionshistory.forEach(transaction => {
+      console.log();
+      console.log("Id de la transacción .............. " + transaction.id);
+      console.log("Fecha de la transacción ........... " + transaction.date);
+      console.log("Precio ............................ " + transaction.price);
+      console.log("Objeto ............................ " + transaction.furniture.name);
+      console.log("Cantidad de objetos ............... " + transaction.quantity);
+      console.log("Tipo de transacción ............... " + transaction.transactiontype);
+      console.log();
+    });
+  }
+
+  getHistoricInfo(dias: number) {
+    const miliseconds = dias * 24 * 60 * 60 * 1000;
+    const thisday: Date = new Date();
+    let fromday: Date = new Date(thisday.getTime() - miliseconds);
+    let profit: number = 0;
+    let losses: number = 0;
+    let mostselled: Map<string, [Furniture, number]> = new Map<string, [Furniture, number]>;
+    
+    this.transactionshistory.forEach(transaction => {
+      if (transaction.date >= fromday) {
+        console.log();
+        console.log("Id de la transacción ............ " + transaction.id);
+        console.log("Fecha de la transacción ......... " + transaction.date);
+        console.log("Precio .......................... " + transaction.price);
+        console.log("Objeto .......................... " + transaction.furniture.name);
+        console.log("Cantidad de objetos ............. " + transaction.quantity);
+        console.log("Tipo de transacción ............. " + transaction.transactiontype);
+        console.log();
+        
+        if (transaction.transactiontype == "Venta") {
+          profit = profit + transaction.price;
+          if (!mostselled.has(transaction.furniture.name)) {
+            mostselled.set(transaction.furniture.name, [transaction.furniture, 1]);
+          }
+        } else if (transaction.transactiontype == "Compra") {
+          losses = losses + transaction.price;
+        }
+      }
+    })
+    console.log();
+    console.log("Ganancias ....................... " + profit);
+    console.log("Pérdidas ........................ " + losses);
+    console.log("Balance ........................ " + (profit - losses));
+    console.log("Estadísticas de los objetos: ");
+    
+    mostselled.forEach((value, index) => {
+      console.log()
+      console.log("Nombre ........................ " + index);
+      console.log("ventas ........................ " + value[1]);
+    }) 
+    console.log();
+  }
+}
+```
+
+2. **Implementación de la Interfaz de Usuario**:
 La interfaz de usuario se ha desarrollado utilizando la biblioteca inquirer, que permite una interacción amigable a través de la línea de comandos. Se han diseñado distintas opciones de menú para realizar operaciones de gestión y consulta en la base de datos. Cada opción del menú desencadena una serie de acciones específicas, como agregar, eliminar, buscar o consultar información detallada.
 
-3. Gestión de Clientes:
+**Ejemplo**:
+
+``` ts
+async function mainMenu() {
+  // Menú principal
+  const answer = await inquirer.prompt({
+    name: 'action',
+    type: 'list',
+    message: 'Seleccione una acción:',
+    choices: [
+      'Gestionar los clientes',
+      'Gestionar los muebles',
+      'Gestionar los proveedores',
+      'Consultar el stock',
+      'Salir'
+    ],
+  });
+  // Dependiendo de la opción seleccionada, llamamos a la función correspondiente
+  switch (answer.action) {
+    case 'Gestionar los clientes':
+      await manageCustomers();
+      break;
+    case 'Gestionar los muebles':
+      await manageFurniture();
+      break;
+    case 'Gestionar los proveedores':
+      await manageProviders();
+      break;
+    case 'Consultar el stock':
+      await ConsultarStock();
+      break;
+    case 'Salir':
+      console.log('Saliendo...');
+      process.exit();
+  }
+  await mainMenu();
+}
+```
+
+Como podemos ver, se da al usuario a elegir entre opciones determinadas y, según la opción escogida por consola, llamamos a una función u otra.
+
+3. **Gestión de Clientes**:
 Para la gestión de clientes, se han implementado funciones que permiten agregar, eliminar y buscar clientes en la base de datos. Los usuarios pueden ingresar los detalles del cliente, como nombre, contacto y dirección, y realizar acciones según las necesidades del negocio.
 
-4. Gestión de Muebles:
+``` ts
+async function addCustomer() {
+  const customer = await inquirer.prompt([
+    {
+      name: 'id',
+      message: 'Ingrese el id del cliente:', 
+    },
+    {
+      name: 'name',
+      message: 'Ingrese el nombre del cliente:',
+    },
+    {
+      name: 'contact',
+      message: 'Ingrese el contacto del cliente:',
+    },
+    {
+      name: 'address',
+      message: 'Ingrese la dirección del cliente:',
+    },
+  ]);
+  (db.get('clients')as any).push(customer).write();
+  console.log(`Cliente agregado con éxito.`);
+}
+
+async function deleteCustomer() {
+  db.read();
+  const clients: Customer[] = db.get('clients').value();
+  if (clients.length === 0) {
+    console.log('No hay clientes para eliminar.');
+    return;
+  }
+  const clientNames = clients.map(client => client.name);
+  const { clientNameToDelete } = await inquirer.prompt({
+    name: 'clientNameToDelete',
+    type: 'list',
+    choices: clientNames,
+    message: 'Seleccione el cliente a eliminar:'
+  });
+  const updatedClients = clients.filter(client => client.name !== clientNameToDelete);
+  db.set('clients', updatedClients).write();
+  console.log(`Cliente eliminado con éxito.`);
+}
+```
+
+Además de estas funciones encontramos más funciones para buscar clientes en la base de datos o manejar los clientes por consola
+
+4. **Gestión de Muebles**:
 La gestión de muebles sigue un proceso similar, con funciones para agregar, eliminar y buscar muebles en la base de datos. Además, se ha incluido una función para consultar información detallada sobre un mueble específico, proporcionando detalles como descripción, material, precio y cantidad en stock.
 
-5. Gestión de Proveedores:
+``` ts
+async function addFurniture() {
+  const furniture = await inquirer.prompt([
+    {
+      name: 'id',
+      message: 'Ingrese el id del mueble:', 
+    },
+    {
+      name: 'name',
+      message: 'Ingrese el nombre del mueble:',
+    },
+    {
+      name: 'description',
+      message: 'Ingrese la descripción del mueble:',
+    },
+    {
+      name: 'material',
+      message: 'Ingrese el material del mueble:',
+    },
+    {
+      name: 'dimensions',
+      message: 'Ingrese las dimensiones del mueble:',
+    },
+    {
+      name: 'price',
+      type: 'number',
+      message: 'Ingrese el precio del mueble:',
+    },
+    {
+      name: 'quantity',
+      type: 'number',
+      message: 'Ingrese cuantos quiere añadir',
+    }
+  ]);
+  (db.get('furniture') as any).push(furniture).write();
+  stock.addItem(furniture, furniture.quantity)
+  console.log(`Mueble agregado con éxito.`);
+}
+
+
+async function deleteFurniture() {
+  db.read();
+  const furnitureList: Furniture[] = db.get('furniture').value();
+  if (!furnitureList.length) {
+    console.log('No hay muebles para eliminar.');
+    return;
+  }
+  let furnitureNames = furnitureList.map((furniture) => furniture.name);
+  furnitureNames = furnitureNames.filter((item, index) => furnitureNames.indexOf(item) === index);
+  const deletefurnitureinfo = await inquirer.prompt([
+    {
+    type: 'list',
+    name: 'furnitureNameToDelete',
+    choices: furnitureNames,
+    message: 'Seleccione el mueble a eliminar:'
+    },
+    {
+      type: 'number',
+      name: 'quantity',
+      message: '¿Cuántos desea eliminar?'
+    }
+  ]);
+  const updatedFurnitureList = [...furnitureList];
+  const furnituretodelete: Furniture = updatedFurnitureList.find(value => value.name == deletefurnitureinfo.furnitureNameToDelete) as Furniture;
+  const rest = furnituretodelete.quantity - deletefurnitureinfo.quantity;
+  updatedFurnitureList.forEach((item, index) => {
+    if (item === furnituretodelete) {
+      item.quantity == 0 ? updatedFurnitureList.splice(index, 1) : item.quantity = rest;
+    }
+  });
+  db.set('furniture', updatedFurnitureList).write();
+  stock.removeItem(furnituretodelete, rest);
+  console.log(`Mueble eliminado con éxito.`);
+}
+```
+
+Igual que en apartado anterior, también contamos con funciones para buscar muebles en la base de datos y para manejar los muebles desde la consola
+
+5. **Gestión de Proveedores**:
 Se han desarrollado funciones para agregar, eliminar y buscar proveedores en la base de datos. Los usuarios pueden ingresar detalles como nombre, contacto y dirección del proveedor, lo que facilita el seguimiento y la gestión de la cadena de suministro.
 
-6. Consulta de Stock:
-La aplicación ofrece opciones para consultar el stock de muebles, lo que permite a los usuarios verificar la cantidad disponible de cada artículo en el inventario. Además, se han incluido funciones para consultar transacciones pasadas y generar informes sobre ventas y compras, ofreciendo una visión detallada del rendimiento del negocio.
+``` ts
+async function addProvider() {
+  const provider = await inquirer.prompt([
+    {
+      name: 'id',
+      message: 'Ingrese el id del proveedor:', 
+    },
+    {
+      name: 'name',
+      message: 'Ingrese el nombre del proveedor:',
+    },
+    {
+      name: 'contact',
+      message: 'Ingrese el contacto del proveedor:',
+    },
+    {
+      name: 'address',
+      message: 'Ingrese la dirección del proveedor:',
+    },
+  ]);
+  (db.get('suppliers') as any).push(provider).write();
+  console.log(`Proveedor agregado con éxito.`);
+}
 
+async function deleteProvider() {
+  db.read();
+  const providers: Provider[] = db.get('suppliers').value();
+  if (!providers.length) {
+    console.log('No hay proveedores para eliminar.');
+    return;
+  }
+  const providerNames = providers.map((provider) => provider.name);
+  const { providerNameToDelete } = await inquirer.prompt([{
+    name: 'providerNameToDelete',
+    type: 'list',
+    choices: providerNames,
+    message: 'Seleccione el proveedor a eliminar:'
+  }]);
+  const updatedProviders = providers.filter((provider) => provider.name !== providerNameToDelete);
+  db.set('suppliers', updatedProviders).write();
+  console.log(`Proveedor eliminado con éxito.`);
+}
+```
 
---- 
+---
+
 # 9. Conclusiones:
+
 La aplicación de gestión de muebles desarrollada constituye una solución integral y eficiente para administrar clientes, proveedores, muebles y stock en el sector mobiliario. Este proyecto ha permitido aplicar conceptos teóricos en un contexto práctico, fortaleciendo las habilidades de desarrollo de software y gestión de bases de datos. La implementación exitosa de esta aplicación demuestra la capacidad para diseñar y desarrollar soluciones tecnológicas adaptadas a las necesidades específicas de las empresas del sector.
