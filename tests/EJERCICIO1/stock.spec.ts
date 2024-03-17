@@ -382,5 +382,24 @@ describe('StockEntity', () => {
       expect(loggedOutput).to.include("Pérdidas ........................ 50");
     });
   });
+  // pruebas linea 170
+  describe('getHistoricInfo', () => {
+    let stock: Stock;
+    let furniture: Furniture;
+  
+    beforeEach(() => {
+      // Initialize the stock entity and furniture item
+      stock = new Stock([]);
+      furniture = {
+        id: 1,
+        name: 'Chair',
+        description: 'A wooden chair',
+        material: 'Wood',
+        dimensions: '40x40x90',
+        price: 50,
+        quantity: 10
+      };
+    });  
+  });
 
 });

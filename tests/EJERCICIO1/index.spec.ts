@@ -62,7 +62,6 @@ describe('Index', () => {
     };
     expect(provider).to.be.a('object');
   });
-
   // es una funcion
   it('should be a function', () => {
     const customer: Customer = {
