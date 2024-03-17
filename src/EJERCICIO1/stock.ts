@@ -166,8 +166,6 @@ export class Stock {
           profit = profit + transaction.price;
           if (!mostselled.has(transaction.furniture.name)) {
             mostselled.set(transaction.furniture.name, [transaction.furniture, 1]);
-          } else {
-            mostselled.set(transaction.furniture.name, [transaction.furniture, mostselled.get(transaction.furniture.name)![1] + transaction.quantity]);
           }
         } else if (transaction.transactiontype == "Compra") {
           losses = losses + transaction.price;

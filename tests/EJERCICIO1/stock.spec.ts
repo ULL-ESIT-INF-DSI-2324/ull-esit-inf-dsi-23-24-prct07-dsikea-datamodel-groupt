@@ -401,5 +401,156 @@ describe('StockEntity', () => {
       };
     });  
   });
+  // prueba para cmoporbar si el dia de la transacción es mayor a fromday
+  it('should check if the transaction date is greater than fromday', () => {
+    const now = new Date();
+    stock['transactionshistory'].push({
+      id: 1,
+      date: now,
+      price: 50,
+      quantity: 5,
+      transactiontype: 'Venta',
+      furniture
+    });
+    stock.getHistoricInfo(1);
+    expect(stock['transactionshistory'][0].date >= now).to.be.true;
+  });
+  // si el dia de la transacción es mayor a fromday imprime la información
+  it('should print the information if the transaction date is greater than fromday', () => {
+    const now = new Date();
+    stock['transactionshistory'].push({
+      id: 1,
+      date: now,
+      price: 50,
+      quantity: 5,
+      transactiontype: 'Venta',
+      furniture
+    });
+    stock.getHistoricInfo(1);
+    expect(stock['transactionshistory'][0].date >= now).to.be.true;
+  });
+  it('should print the information if the transaction date is greater than fromday', () => {
+    const now = new Date();
+    stock['transactionshistory'].push({
+      id: 1,
+      date: now,
+      price: 50,
+      quantity: 5,
+      transactiontype: 'Venta',
+      furniture
+    });
+    // Spy on console.log
+    const logSpy = sinon.spy(console, 'log');
+    stock.getHistoricInfo(1);
+    // Check if console.log was called with the expected arguments
+    expect(logSpy.calledWith("Id de la transacción ............ 1")).to.be.true;
+    expect(logSpy.calledWith("Fecha de la transacción ......... " + now.toString())).to.be.true;
+    expect(logSpy.calledWith("Precio .......................... 50")).to.be.true;
+    expect(logSpy.calledWith("Objeto .......................... Chair")).to.be.true;
+    expect(logSpy.calledWith("Cantidad de objetos ............. 5")).to.be.true;
+    expect(logSpy.calledWith("Tipo de transacción ............. Venta")).to.be.true;
+    // Restore console.log
+    logSpy.restore();
+  });
+  // comprueba si el tipo de transaccion es venta suma el precio al total de perdidas
+  it('should update losses on sale transaction', () => {
+    stock['transactionshistory'].push({
+      id: 1,
+      date: new Date(),
+      price: 50,
+      quantity: 5,
+      transactiontype: 'Venta',
+      furniture
+    });
+    stock.getHistoricInfo(1);
+    expect(stock['transactionshistory'][0].price).to.be.equal(50);
+  });
+  // si no es el mas mostselled y tiene el nombre del mueble lo agrega al mapa
+  it('should add furniture to mostselled if not already present', () => {
+    // Create a Stock instance
+    const stock: Stock = new Stock([]);
+  
+    // Create a transaction
+    const transaction: Transaction = {
+      id: 1,
+      date: new Date(),
+      price: 100,
+      quantity: 1,
+      transactiontype: 'Venta',
+      furniture: {
+        id: 1,
+        name: 'Chair',
+        description: 'A comfortable chair',
+        material: 'Wood',
+        dimensions: '50x50x90',
+        price: 100,
+        quantity: 10
+      }
+    };
+    // Execute the code block
+    stock['mostselled'] = new Map<string, [Furniture, number]>();
+    stock['mostselled'].set('Chair', [transaction.furniture, 1]); // Add an existing item to mostselled
+    stock['transactionshistory'].push(transaction); // Add the transaction to history
+    stock.getHistoricInfo(1); // Execute the function with 1 day period
+    // Check if the furniture is added to mostselled correctly
+    expect(stock['mostselled'].get('Chair')).to.deep.equal([transaction.furniture, 1]);
+  });
+  // verifica si el mapa mostselled ya contiene un elemento con el nombre del mueble de la transacción actual. mostselled es un mapa que contiene el nombre del mueble y un arreglo con el mueble y la cantidad de veces que se ha vendido
+  it('should update the quantity of the furniture in mostselled if already present', () => {
+    // Create a Stock instance
+    const stock: Stock = new Stock([]);
+    // Create a transaction
+    const transaction: Transaction = {
+      id: 1,
+      date: new Date(),
+      price: 100,
+      quantity: 1,
+      transactiontype: 'Venta',
+      furniture: {
+        id: 1,
+        name: 'Chair',
+        description: 'A comfortable chair',
+        material: 'Wood',
+        dimensions: '50x50x90',
+        price: 100,
+        quantity: 10
+      }
+    };
+    // Execute the code block
+    stock['mostselled'] = new Map<string, [Furniture, number]>();
+    stock['mostselled'].set('Chair', [transaction.furniture, 1]); // Add an existing item to mostselled
+    stock['transactionshistory'].push(transaction); // Add the transaction to history
+    stock.getHistoricInfo(1); // Execute the function with 1 day period
+    // Check if the quantity of the furniture is updated correctly
+    expect(stock['mostselled'].get('Chair')).to.deep.equal([transaction.furniture, 1]);
+  });
+  // Si la transacción actual es de tipo "Compra" SE SUMA EL PRECIO AL TOTAL DE PERDIDAS con el precio de la transacción
+  it('should update losses on purchase transaction', () => {
+    // Create a Stock instance
+    const stock: Stock = new Stock([]);
+    // Create a transaction
+    const transaction: Transaction = {
+      id: 1,
+      date: new Date(),
+      price: 100,
+      quantity: 1,
+      transactiontype: 'Compra',
+      furniture: {
+        id: 1,
+        name: 'Chair',
+        description: 'A comfortable chair',
+        material: 'Wood',
+        dimensions: '50x50x90',
+        price: 100,
+        quantity: 10
+      }
+    };
+    // Execute the code block
+    stock['transactionshistory'].push(transaction); // Add the transaction to history
+    stock.getHistoricInfo(1); // Execute the function with 1 day period
+    // Check if the losses are updated correctly
+    expect(stock['transactionshistory'][0].price).to.be.equal(100);
+  });
+  // Si la transacción actual es de tipo "Venta" SE SUMA EL PRECIO AL TOTAL DE PERDIDAS con el precio de la transacción
 
 });
