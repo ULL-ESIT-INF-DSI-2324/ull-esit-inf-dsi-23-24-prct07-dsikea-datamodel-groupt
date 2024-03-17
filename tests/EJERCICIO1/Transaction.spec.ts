@@ -321,6 +321,7 @@ describe('Transaction Entity', () => {
     expect(transaction.transactiontype).to.be.a('string');
     expect(transaction.furniture).to.be.an('object');
   });
+  
   // comporbamos que no tenga propiedades adicionales
   it('should not have additional properties', () => {
     const transaction: Transaction = {
