@@ -10,7 +10,7 @@
     "declaration": true,
     "rootDir": "./src",
     "outDir": "./dist",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,

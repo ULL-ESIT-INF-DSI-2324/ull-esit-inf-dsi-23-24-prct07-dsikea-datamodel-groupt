@@ -1,17 +1,17 @@
 import inquirer from 'inquirer';
-import  low from 'lowdb';
+import low from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync';
-import { CustomerManager } from './Customer';
-import { FurnitureManager } from './Furniture';
-import { ProviderManager } from './Providers';
-import { Furniture } from './FurnitureEntity';
-import { Customer } from './CustomerEntity';
-import { Provider } from './ProviderEntity';
+import { Customer } from './customer';
+import { Furniture } from './furniture';
+import { Provider } from './provider';
+import { Stock } from './stock';
+
 
 // Configuración de la base de datos Lowdb
 const adapter = new FileSync('db.json');
 const db = low(adapter);
 db.defaults({ furniture: [], suppliers: [], clients: [] }).write();
+let stock: Stock = new Stock(db.get('furniture').value())
 
 /**
  * Función para mostrar el menú principal
@@ -27,6 +27,7 @@ async function mainMenu() {
       'Gestionar los clientes',
       'Gestionar los muebles',
       'Gestionar los proveedores',
+      'Consultar el stock',
       'Salir'
     ],
   });
@@ -40,6 +41,9 @@ async function mainMenu() {
       break;
     case 'Gestionar los proveedores':
       await manageProviders();
+      break;
+    case 'Consultar el stock':
+      await ConsultarStock();
       break;
     case 'Salir':
       console.log('Saliendo...');
@@ -235,10 +239,17 @@ async function addFurniture() {
     },
     {
       name: 'price',
+      type: 'number',
       message: 'Ingrese el precio del mueble:',
     },
+    {
+      name: 'quantity',
+      type: 'number',
+      message: 'Ingrese cuantos quiere añadir',
+    }
   ]);
   (db.get('furniture') as any).push(furniture).write();
+  stock.addItem(furniture, furniture.quantity)
   console.log(`Mueble agregado con éxito.`);
 }
 
@@ -260,22 +271,42 @@ async function deleteFurniture() {
   }
 
   // Preparamos la lista de nombres de muebles para Inquirer
-  const furnitureNames = furnitureList.map((furniture) => furniture.name);
+  let furnitureNames = furnitureList.map((furniture) => furniture.name);
+  furnitureNames = furnitureNames.filter((item, index) => furnitureNames.indexOf(item) === index);
 
   // Solicitamos al usuario que seleccione el mueble a eliminar por nombre
-  const { furnitureNameToDelete } = await inquirer.prompt([{
+  const deletefurnitureinfo = await inquirer.prompt([
+    {
     type: 'list',
     name: 'furnitureNameToDelete',
     choices: furnitureNames,
     message: 'Seleccione el mueble a eliminar:'
-  }]);
+    },
+    {
+      type: 'number',
+      name: 'quantity',
+      message: '¿Cuántos desea eliminar?'
+    }
+  ]);
 
   // Filtramos el mueble seleccionado y actualizamos la base de datos
-  const updatedFurnitureList = furnitureList.filter((furniture) => furniture.name !== furnitureNameToDelete);
-  db.set('furniture', updatedFurnitureList).write();
+  const updatedFurnitureList = [...furnitureList];
+  const furnituretodelete: Furniture = updatedFurnitureList.find(value => value.name == deletefurnitureinfo.furnitureNameToDelete) as Furniture;
 
+  const rest = furnituretodelete.quantity - deletefurnitureinfo.quantity;
+  
+  updatedFurnitureList.forEach((item, index) => {
+    if (item === furnituretodelete) {
+      item.quantity == 0 ? updatedFurnitureList.splice(index, 1) : item.quantity = rest;
+    }
+  });
+
+  db.set('furniture', updatedFurnitureList).write();
+  stock.removeItem(furnituretodelete, rest);
   console.log(`Mueble eliminado con éxito.`);
+  
 }
+
 
 /**
  * Función para buscar un mueble
@@ -524,6 +555,88 @@ async function manageProviders() {
   }
 
   await manageProviders();
+}
+
+async function ConsultarStock() {
+  const answer = await inquirer.prompt({
+    name: 'action',
+    type: 'list',
+    message: '¿Qué desea consultar del stock?',
+    choices: [
+      'Consultar stock entero',
+      'Consultar mueble',
+      'Ver transacciones',
+      'Obtener informes de ventas y compras'
+    ]
+  });
+
+  switch (answer.action) {
+    case 'Consultar stock entero':
+      stock.printStock();
+      break;
+    case 'Consultar mueble':
+      await printSpecificItemInfo();
+      break;
+    case 'Ver transacciones':
+      stock.printTransactions();
+      break;
+    case 'Obtener informes de ventas y compras':
+      await getHistoricInfo();
+      break;
+    default:
+      break;
+  }
+}
+
+async function getHistoricInfo() {
+  const opciones = await inquirer.prompt(
+    {
+      name: 'dias',
+      type: 'number',
+      message: '¿Desde cuántos días atrás quieres mirar? (default: 0)',
+      default: 0
+    }
+  );
+
+  stock.getHistoricInfo(opciones.dias);
+
+  
+}
+
+async function printSpecificItemInfo() {
+  db.read();
+
+  // Obtenemos la lista de muebles actual
+  const furnitureList: Furniture[] = db.get('furniture').value();
+
+  // Si no hay muebles, informamos al usuario
+  if (!furnitureList.length) {
+    console.log('No hay muebles para eliminar.');
+    return;
+  }
+
+  // Preparamos la lista de nombres de muebles para Inquirer
+  let furnitureNames = furnitureList.map((furniture) => furniture.name);
+  furnitureNames = furnitureNames.filter((item, index) => furnitureNames.indexOf(item) === index);
+  furnitureNames.push('Menú principal')
+
+  // Solicitamos al usuario que seleccione el mueble a eliminar por nombre
+  const itemName = await inquirer.prompt(
+    {
+    type: 'list',
+    name: 'name',
+    choices: furnitureNames,
+    message: 'Seleccione el mueble que desea ver'
+    },
+  );
+
+  if (itemName.name == 'Menú principal' ) {
+    await mainMenu()
+  }
+  stock.specificItemInfo(itemName.name);
+  
+
+  await printSpecificItemInfo()
 }
 
 // Iniciamos el programa

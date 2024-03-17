@@ -16,4 +16,5 @@ export interface Furniture {
   material: string;
   dimensions: string;
   price: number;
+  quantity: number;
 }

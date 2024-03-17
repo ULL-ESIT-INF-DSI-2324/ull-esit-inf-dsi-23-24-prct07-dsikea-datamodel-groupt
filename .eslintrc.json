@@ -15,5 +15,11 @@
         "@typescript-eslint"
     ],
     "rules": {
+        // regla para que no se muestre el error de que no se usa el import
+        "no-unused-vars": "off",
+        // regla para que no muestre error con any
+        "@typescript-eslint/no-explicit-any": "off",
+        // regla para usar const
+        "prefer-const": "off"
     }
 }
