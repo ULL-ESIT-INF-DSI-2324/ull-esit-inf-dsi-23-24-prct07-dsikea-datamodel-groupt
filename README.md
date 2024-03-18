@@ -21,6 +21,7 @@
 
 [![Tests](https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct07-dsikea-datamodel-groupt/actions/workflows/node.js.yml/badge.svg)](https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct07-dsikea-datamodel-groupt/actions/workflows/node.js.yml)
 
+[![Sonarcloud](https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct07-dsikea-datamodel-groupt/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct07-dsikea-datamodel-groupt/actions/workflows/sonarcloud.yml)
 
 ---
 
@@ -33,8 +34,8 @@
 5. [Principios SOLID](#5-principios-solid)
 6. [GitHub Actions](#github-actions)
 7. [SonarCloud](#sonarcloud)
-8. [Ejercicio]
-9. [Conclusiones]
+8. [Ejercicio](#8-ejercicio)
+9. [Conclusiones](#9-conclusiones)
 
 ---
 
